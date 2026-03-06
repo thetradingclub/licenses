@@ -1,12 +1,3 @@
 {
-  "licenses": [
-    {
-      "key": "1234",
-      "account": 24310306,
-      "name": "Luca Bezzeccheri",
-      "active": false,
-      "created": "2026-03-06",
-      "expiry": "2026-03-08"
-    }
-  ]
+  "licenses": []
 }
