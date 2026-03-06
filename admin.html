@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CopyTrader License Manager</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+
+  /* LOGIN */
+  #loginScreen { display:flex; justify-content:center; align-items:center; height:100vh; }
+  .loginBox { background:#16213e; padding:40px; border-radius:12px; width:340px; }
+  .loginBox h2 { margin-bottom:20px; color:#e94560; text-align:center; }
+  .loginBox input { width:100%; padding:10px; margin:8px 0; background:#0f3460; border:1px solid #444; color:#fff; border-radius:6px; font-size:14px; }
+  .loginBox button { width:100%; padding:12px; background:#e94560; border:none; color:#fff; border-radius:6px; cursor:pointer; font-size:15px; margin-top:10px; }
+  .loginBox button:hover { background:#c73652; }
+  .errMsg { color:#e94560; font-size:13px; margin-top:8px; text-align:center; }
+
+  /* MAIN */
+  #mainScreen { display:none; padding:20px; max-width:1100px; margin:0 auto; }
+  .topBar { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .topBar h1 { color:#e94560; font-size:22px; }
+  .btnLogout { padding:8px 18px; background:#555; border:none; color:#fff; border-radius:6px; cursor:pointer; }
+  .btnLogout:hover { background:#777; }
+
+  /* CARD */
+  .card { background:#16213e; padding:22px; border-radius:10px; margin-bottom:20px; }
+  .card h3 { margin-bottom:16px; color:#aaa; font-size:15px; text-transform:uppercase; letter-spacing:1px; }
+
+  /* FORM AGGIUNGI */
+  .formGrid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:10px; align-items:end; }
+  .formGrid label { font-size:12px; color:#888; display:block; margin-bottom:4px; }
+  .formGrid input { width:100%; padding:9px; background:#0f3460; border:1px solid #444; color:#fff; border-radius:6px; font-size:13px; }
+  .btnAdd { padding:9px 20px; background:#00cc66; border:none; color:#000; border-radius:6px; cursor:pointer; font-weight:bold; white-space:nowrap; }
+  .btnAdd:hover { background:#00aa55; }
+
+  /* TABELLA */
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:#0f3460; padding:10px 12px; text-align:left; color:#aaa; font-weight:normal; }
+  td { padding:10px 12px; border-bottom:1px solid #0f3460; vertical-align:middle; }
+  tr:hover td { background:#1a2a4a; }
+  .badge { padding:3px 10px; border-radius:20px; font-size:12px; font-weight:bold; }
+  .active  { background:#003322; color:#00cc66; }
+  .inactive{ background:#330011; color:#e94560; }
+  .expiring{ background:#332200; color:#ffaa00; }
+  .expired { background:#220000; color:#ff4444; }
+  .btnToggle { padding:5px 12px; border:none; border-radius:5px; cursor:pointer; font-size:12px; background:#f0a500; color:#000; }
+  .btnToggle:hover { background:#d09000; }
+  .btnDel { padding:5px 12px; border:none; border-radius:5px; cursor:pointer; font-size:12px; background:#e94560; color:#fff; margin-left:6px; }
+  .btnDel:hover { background:#c73652; }
+  .btnEdit { padding:5px 12px; border:none; border-radius:5px; cursor:pointer; font-size:12px; background:#3a7bd5; color:#fff; margin-left:6px; }
+  .btnEdit:hover { background:#2a6bc5; }
+
+  /* TOAST */
+  #toast { position:fixed; bottom:24px; right:24px; background:#00cc66; color:#000; padding:12px 22px; border-radius:8px; font-weight:bold; display:none; z-index:999; }
+  #toast.err { background:#e94560; color:#fff; }
+
+  /* MODAL EDIT */
+  .overlay { display:none; position:fixed; top:0;left:0;width:100%;height:100%; background:rgba(0,0,0,0.7); z-index:100; justify-content:center; align-items:center; }
+  .overlay.open { display:flex; }
+  .modal { background:#16213e; padding:30px; border-radius:12px; width:420px; }
+  .modal h3 { margin-bottom:18px; color:#e94560; }
+  .modal label { font-size:12px; color:#888; display:block; margin:10px 0 4px; }
+  .modal input { width:100%; padding:9px; background:#0f3460; border:1px solid #444; color:#fff; border-radius:6px; font-size:13px; }
+  .modalBtns { display:flex; gap:10px; margin-top:20px; }
+  .btnSave { flex:1; padding:10px; background:#00cc66; border:none; color:#000; border-radius:6px; cursor:pointer; font-weight:bold; }
+  .btnCancel { flex:1; padding:10px; background:#555; border:none; color:#fff; border-radius:6px; cursor:pointer; }
+
+  .statsRow { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  .stat { background:#16213e; padding:16px; border-radius:10px; text-align:center; }
+  .stat .num { font-size:28px; font-weight:bold; color:#e94560; }
+  .stat .lbl { font-size:12px; color:#888; margin-top:4px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="loginBox">
+    <h2>&#128272; License Manager</h2>
+    <input type="password" id="tokenInput" placeholder="GitHub Personal Access Token" />
+    <input type="text" id="repoInput" placeholder="username/repository  (es: thetradingclub/licenses)" />
+    <input type="text" id="fileInput" placeholder="Nome file JSON  (es: licenses.json)" value="licenses.json" />
+    <button onclick="doLogin()">Accedi</button>
+    <div class="errMsg" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="mainScreen">
+  <div class="topBar">
+    <h1>&#128273; CopyTrader License Manager</h1>
+    <button class="btnLogout" onclick="doLogout()">Logout</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="statsRow">
+    <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Totale licenze</div></div>
+    <div class="stat"><div class="num" id="statActive" style="color:#00cc66">0</div><div class="lbl">Attive</div></div>
+    <div class="stat"><div class="num" id="statExpiring" style="color:#ffaa00">0</div><div class="lbl">In scadenza (30gg)</div></div>
+    <div class="stat"><div class="num" id="statExpired" style="color:#ff4444">0</div><div class="lbl">Scadute</div></div>
+  </div>
+
+  <!-- AGGIUNGI -->
+  <div class="card">
+    <h3>Aggiungi nuova licenza</h3>
+    <div class="formGrid">
+      <div><label>Chiave licenza</label><input id="nKey" placeholder="CT-XXXX-YYYY" /></div>
+      <div><label>Numero conto MT5</label><input id="nAccount" placeholder="12345678" type="number" /></div>
+      <div><label>Nome cliente</label><input id="nName" placeholder="Mario Rossi" /></div>
+      <div><label>Scadenza (lascia vuoto = perpetua)</label><input id="nExpiry" type="date" /></div>
+      <div><button class="btnAdd" onclick="addLicense()">+ Aggiungi</button></div>
+    </div>
+  </div>
+
+  <!-- TABELLA -->
+  <div class="card">
+    <h3>Licenze clienti</h3>
+    <table>
+      <thead><tr>
+        <th>Chiave</th><th>Conto MT5</th><th>Cliente</th>
+        <th>Scadenza</th><th>Stato</th><th>Creata</th><th>Azioni</th>
+      </tr></thead>
+      <tbody id="licenseTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL EDIT -->
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <h3>Modifica licenza</h3>
+    <label>Chiave</label><input id="eKey" readonly style="opacity:0.5" />
+    <label>Numero conto MT5</label><input id="eAccount" type="number" />
+    <label>Nome cliente</label><input id="eName" />
+    <label>Scadenza (lascia vuoto = perpetua)</label><input id="eExpiry" type="date" />
+    <div class="modalBtns">
+      <button class="btnCancel" onclick="closeEdit()">Annulla</button>
+      <button class="btnSave" onclick="saveEdit()">Salva</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let TOKEN="", REPO="", FILE="licenses.json", fileSHA="", licenses=[];
+let editIndex=-1;
+
+function doLogin(){
+  TOKEN = document.getElementById("tokenInput").value.trim();
+  REPO  = document.getElementById("repoInput").value.trim();
+  FILE  = document.getElementById("fileInput").value.trim()||"licenses.json";
+  if(!TOKEN||!REPO){ document.getElementById("loginErr").innerText="Compila tutti i campi."; return; }
+  loadLicenses(true);
+}
+function doLogout(){
+  TOKEN=""; REPO=""; licenses=[];
+  document.getElementById("mainScreen").style.display="none";
+  document.getElementById("loginScreen").style.display="flex";
+}
+
+async function apiGet(){
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
+    headers:{"Authorization":"token "+TOKEN,"Accept":"application/vnd.github.v3+json"}
+  });
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  return r.json();
+}
+async function apiPut(content, sha, msg){
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
+    method:"PUT",
+    headers:{"Authorization":"token "+TOKEN,"Accept":"application/vnd.github.v3+json","Content-Type":"application/json"},
+    body: JSON.stringify({ message:msg, content:btoa(unescape(encodeURIComponent(content))), sha:sha })
+  });
+  if(!r.ok){ const e=await r.json(); throw new Error(e.message||"HTTP "+r.status); }
+  return r.json();
+}
+
+async function loadLicenses(isLogin=false){
+  try {
+    const data = await apiGet();
+    fileSHA   = data.sha;
+    const raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g,""))));
+    const obj = JSON.parse(raw);
+    licenses  = obj.licenses||[];
+    if(isLogin){
+      document.getElementById("loginScreen").style.display="none";
+      document.getElementById("mainScreen").style.display="block";
+      document.getElementById("loginErr").innerText="";
+    }
+    renderTable();
+  } catch(e){
+    if(isLogin) document.getElementById("loginErr").innerText="Errore: "+e.message;
+    else showToast("Errore caricamento: "+e.message, true);
+  }
+}
+
+async function saveLicenses(msg){
+  const content = JSON.stringify({licenses:licenses}, null, 2);
+  try {
+    const res = await apiPut(content, fileSHA, msg);
+    fileSHA = res.content.sha;
+    showToast("Salvato!");
+    renderTable();
+  } catch(e){ showToast("Errore salvataggio: "+e.message, true); }
+}
+
+function addLicense(){
+  const key    = document.getElementById("nKey").value.trim();
+  const acc    = document.getElementById("nAccount").value.trim();
+  const name   = document.getElementById("nName").value.trim();
+  const expiry = document.getElementById("nExpiry").value;
+  if(!key||!acc||!name){ showToast("Compila chiave, conto e nome!",true); return; }
+  if(licenses.find(l=>l.key===key)){ showToast("Chiave già esistente!",true); return; }
+  licenses.push({ key, account:parseInt(acc), name, active:true,
+                  created: new Date().toISOString().split("T")[0], expiry: expiry||"" });
+  saveLicenses("Aggiunta licenza "+key);
+  document.getElementById("nKey").value="";
+  document.getElementById("nAccount").value="";
+  document.getElementById("nName").value="";
+  document.getElementById("nExpiry").value="";
+}
+
+function toggleLicense(i){
+  licenses[i].active = !licenses[i].active;
+  saveLicenses((licenses[i].active?"Attivata":"Disattivata")+" licenza "+licenses[i].key);
+}
+function deleteLicense(i){
+  if(!confirm("Eliminare la licenza "+licenses[i].key+"?")) return;
+  const key=licenses[i].key;
+  licenses.splice(i,1);
+  saveLicenses("Eliminata licenza "+key);
+}
+function openEdit(i){
+  editIndex=i;
+  const l=licenses[i];
+  document.getElementById("eKey").value=l.key;
+  document.getElementById("eAccount").value=l.account;
+  document.getElementById("eName").value=l.name;
+  document.getElementById("eExpiry").value=l.expiry||"";
+  document.getElementById("editOverlay").classList.add("open");
+}
+function closeEdit(){ document.getElementById("editOverlay").classList.remove("open"); }
+function saveEdit(){
+  const acc=document.getElementById("eAccount").value.trim();
+  const name=document.getElementById("eName").value.trim();
+  const expiry=document.getElementById("eExpiry").value;
+  if(!acc||!name){ showToast("Compila tutti i campi!",true); return; }
+  licenses[editIndex].account=parseInt(acc);
+  licenses[editIndex].name=name;
+  licenses[editIndex].expiry=expiry||"";
+  saveLicenses("Modificata licenza "+licenses[editIndex].key);
+  closeEdit();
+}
+
+function getStatus(l){
+  if(!l.active) return {label:"Disattiva",cls:"inactive"};
+  if(l.expiry){
+    const exp=new Date(l.expiry); const now=new Date();
+    if(now>exp) return {label:"Scaduta",cls:"expired"};
+    const days=Math.ceil((exp-now)/86400000);
+    if(days<=30) return {label:"Scade tra "+days+"gg",cls:"expiring"};
+  }
+  return {label:"Attiva",cls:"active"};
+}
+
+function renderTable(){
+  const tbody=document.getElementById("licenseTable");
+  tbody.innerHTML="";
+  let total=licenses.length, active=0, expiring=0, expired=0;
+  licenses.forEach((l,i)=>{
+    const s=getStatus(l);
+    if(s.cls==="active") active++;
+    if(s.cls==="expiring"){ active++; expiring++; }
+    if(s.cls==="expired") expired++;
+    tbody.innerHTML+=`<tr>
+      <td><code>${l.key}</code></td>
+      <td>${l.account}</td>
+      <td>${l.name}</td>
+      <td>${l.expiry||"Perpetua"}</td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td>${l.created||"—"}</td>
+      <td>
+        <button class="btnEdit" onclick="openEdit(${i})">✏️ Modifica</button>
+        <button class="btnToggle" onclick="toggleLicense(${i})">${l.active?"Disattiva":"Attiva"}</button>
+        <button class="btnDel" onclick="deleteLicense(${i})">🗑️</button>
+      </td>
+    </tr>`;
+  });
+  document.getElementById("statTotal").innerText=total;
+  document.getElementById("statActive").innerText=active;
+  document.getElementById("statExpiring").innerText=expiring;
+  document.getElementById("statExpired").innerText=expired;
+}
+
+function showToast(msg, isErr=false){
+  const t=document.getElementById("toast");
+  t.innerText=msg; t.className=isErr?"err":"";
+  t.style.display="block";
+  setTimeout(()=>t.style.display="none",3000);
+}
+</script>
+</body>
+</html>
