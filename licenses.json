@@ -1,0 +1,11 @@
+{
+  "licenses": [
+    {
+      "key": "CT-0603-2026",
+      "account": 12345678,
+      "name": "Mario Rossi",
+      "active": true,
+      "created": "2026-03-06"
+    }
+  ]
+}
