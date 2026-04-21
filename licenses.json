@@ -31,6 +31,14 @@
       "active": true,
       "created": "2026-03-11",
       "expiry": "2029-02-01"
+    },
+    {
+      "key": "COACCI-FP100K",
+      "account": 12044292,
+      "name": "Alessandro Coacci",
+      "active": true,
+      "created": "2026-04-21",
+      "expiry": "2026-05-03"
     }
   ]
 }
