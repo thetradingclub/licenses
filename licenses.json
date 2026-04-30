@@ -23,6 +23,14 @@
       "active": true,
       "created": "2026-04-28",
       "expiry": "2026-05-31"
+    },
+    {
+      "key": "GAGGIOTTIM-FP100K",
+      "account": 12092963,
+      "name": "Michele Gaggiotti",
+      "active": true,
+      "created": "2026-04-30",
+      "expiry": "2026-06-01"
     }
   ]
 }
