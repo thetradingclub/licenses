@@ -31,6 +31,14 @@
       "active": true,
       "created": "2026-04-30",
       "expiry": "2026-06-01"
+    },
+    {
+      "key": "DALLAPE-FP100K",
+      "account": 12113868,
+      "name": "Riccardo Dallapè",
+      "active": true,
+      "created": "2026-05-03",
+      "expiry": "2026-05-31"
     }
   ]
 }
