@@ -47,6 +47,14 @@
       "active": true,
       "created": "2026-05-08",
       "expiry": ""
+    },
+    {
+      "key": "DISTEFANO-FTMO100K",
+      "account": 12547896,
+      "name": "Massimo Di Stefano",
+      "active": true,
+      "created": "2026-05-26",
+      "expiry": "2026-06-30"
     }
   ]
 }
