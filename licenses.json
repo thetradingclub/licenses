@@ -63,6 +63,14 @@
       "active": true,
       "created": "2026-07-15",
       "expiry": "2026-08-31"
+    },
+    {
+      "key": "RIC-FUNDEDNEXT-3",
+      "account": 14160490,
+      "name": "Riccardo Dallapè",
+      "active": true,
+      "created": "2026-08-04",
+      "expiry": "2026-08-31"
     }
   ]
 }
