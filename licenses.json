@@ -63,6 +63,14 @@
       "active": true,
       "created": "2026-08-04",
       "expiry": "2026-08-31"
+    },
+    {
+      "key": "GIULIA-FN50K",
+      "account": 14163312,
+      "name": "Giulia Martini",
+      "active": true,
+      "created": "2026-08-06",
+      "expiry": "2026-08-31"
     }
   ]
 }
