@@ -71,6 +71,14 @@
       "active": true,
       "created": "2026-08-06",
       "expiry": "2026-08-31"
+    },
+    {
+      "key": "LORIS-FN100K",
+      "account": 14179895,
+      "name": "Loris Beltramelli",
+      "active": true,
+      "created": "2026-08-20",
+      "expiry": "2026-08-31"
     }
   ]
 }
