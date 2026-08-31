@@ -25,14 +25,6 @@
       "expiry": ""
     },
     {
-      "key": "DISTEFANO-FTMO100K",
-      "account": 531413832,
-      "name": "Massimo Di Stefano",
-      "active": true,
-      "created": "2026-05-26",
-      "expiry": "2026-08-31"
-    },
-    {
       "key": "COACCI-FN100K",
       "account": 14183495,
       "name": "Alessandro Coacci",
