@@ -87,6 +87,14 @@
       "active": true,
       "created": "2026-09-05",
       "expiry": "2026-09-30"
+    },
+    {
+      "key": "CESARE-FUNDEDNEXT-3",
+      "account": 3,
+      "name": "Giulio Cesare",
+      "active": true,
+      "created": "2026-09-05",
+      "expiry": "2026-09-30"
     }
   ]
 }
