@@ -111,6 +111,14 @@
       "active": true,
       "created": "2026-10-07",
       "expiry": "2026-10-31"
+    },
+    {
+      "key": "DANIELECORATO-1",
+      "account": 14316679,
+      "name": "Daniele Corato",
+      "active": true,
+      "created": "2026-10-07",
+      "expiry": "2026-10-31"
     }
   ]
 }
