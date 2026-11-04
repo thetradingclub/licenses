@@ -103,6 +103,14 @@
       "active": true,
       "created": "2026-10-07",
       "expiry": "2026-11-30"
+    },
+    {
+      "key": "GAGGIOTTIMIC-1",
+      "account": 14375160,
+      "name": "Michele Gaggiotti",
+      "active": true,
+      "created": "2026-11-04",
+      "expiry": "2026-11-30"
     }
   ]
 }
